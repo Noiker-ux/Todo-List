@@ -1,0 +1,20 @@
+exampleData = [
+    {
+        id: 1,
+        nameTask: 'Completed the vue.js course udemy',
+        active: false,
+        time: "12.08 AM, 04/19/2023"
+    },
+    {
+        id: 2,
+        nameTask: 'Buy a new laptop',
+        active: false,
+        time: "12.08 AM, 04/19/2023"
+    },
+    {
+        id: 55,
+        nameTask: 'Go to the club',
+        active: true,
+        time: "12.08 AM, 04/19/2023"
+    },
+]

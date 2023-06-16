@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/main.css">
+    <title>Todo List</title>
+</head>
+<body>
+    <div class="todo">
+        <h1 class="todo__title">todo list</h1>
+        <div class="todo__menu">
+            <button type="button" class="todo__menu-add" >Add Task</button>
+            <div class="filter__wrapper">
+                <select class="todo__menu-filter" name="todo_filete" id="todo_filete">
+                    <option value="" disabled>--Please choose an option--</option>
+                    <option value="All">All</option>
+                    <option value="Active">Active</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+        </div>
+        <div class="todo__tasks">
+            <div class="addTask__block" id="Addhidden" >
+                <h2 class="addTask__title">Add Task</h2>
+                <div class="inpWrapper">
+                    <label for="addTask__nameInp" class="add_lbl addTask__nameLbl">Title</label><br/>
+                    <input type="text" class="add_input addTask__nameInp" id="addTask__nameInp" required> 
+                </div>
+                <div class="inpWrapper">
+                    <label for="todo_fileter_add" class="add_lbl addTask__nameLbl">Status</label><br/>
+                    <div class="add_lbl filter__wrapper">
+                        <select class="todo__menu-filter todo__menu-filter-add" name="todo_filete" id="todo_fileter_add">
+                            <option value="" disabled>--Please choose an option--</option>
+                            <option value="Active">Active</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="addTask__buttons">
+                    <button type="button" class="addTask__buttons-add buttons-add" >Add Task</button>
+                    <button type="button" class="addTask__buttons-close buttons-close" >Cancel</button>
+                </div>
+            </div>
+            <div class="addTask__block" id="Updatehidden">
+                <h2 class="addTask__title">Update Task</h2>
+                <div class="inpWrapper">
+                    <label for="updTask__nameInp" class="upd_lbl updTask__nameLbl">Title</label><br/>
+                    <input type="text" class="upd_input updTask__nameInp" id="updTask__nameInp" required> 
+                </div>
+                <div class="inpWrapper">
+                    <label for="todo_fileter_upd" class="upd_lbl updTask__nameLbl">Status</label><br/>
+                    <div class="upd_lbl filter__wrapper">
+                        <select class="todo__menu-filter todo__menu-filter-upd" name="todo_filete" id="todo_fileter_upd">
+                            <option value="" disabled>--Please choose an option--</option>
+                            <option value="Active">Active</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="addTask__buttons">
+                    <button type="button" class="UpdateTask__buttons-add buttons-add" >Update Task</button>
+                    <button type="button" class="UpdateTask__buttons-close buttons-close" >Cancel</button>
+                </div>
+            </div>    
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+    <script src="./data/Example.json"></script>
+    <script src="./scripts/app.js"></script>
+</body>
+</html>
