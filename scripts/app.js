@@ -85,24 +85,24 @@ document.querySelectorAll('.UpdateTask__buttons-add').forEach(e=>{
             updTask.nameTask = valueTitle;
             updTask.active = statusNewTask;
             localStorage.setItem(Noiker, JSON.stringify(DataArray));
-            reDraw(idTaskUpdate,valueTitle);
+            reDraw(idTaskUpdate,valueTitle,statusNewTask);
             
     });
 })
-function reDraw(idRedr,valueTitle){
+function reDraw(idRedr,valueTitle,status){
     let DataArray = JSON.parse(localStorage.getItem(Noiker));
     document.querySelectorAll('.task__info-title').forEach(e=>{
         if (e.dataset.idtaskname==idRedr){
             e.textContent=valueTitle;
+            console.log(e.parentNode);
         }
     })
     document.querySelectorAll('.custom-checkbox').forEach(e=>{
-        if (e.dataset.status=="true" && e.idTask==idRedr){
-            e.checked=true;
-        } else {
-            e.checked=false;
+        if (e.dataset.idtask==idRedr){
+            e.checked=status;
+            e.dataset.status=status;
         }
-    });
+    })
 }
 
 
