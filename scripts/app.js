@@ -1,7 +1,6 @@
 'use strict';
 const Noiker = "Noiker-ToDo.js"
 
-
 // функция первой отрисовки при загрузке страницы
 window.addEventListener('DOMContentLoaded', ()=>{
     if (localStorage.getItem(Noiker)==null){
@@ -13,31 +12,30 @@ window.addEventListener('DOMContentLoaded', ()=>{
         });
 });
 
-
-
 // функция дорисовки
 function DopDraw(NewTask){
-    document.querySelector('.todo__tasks').insertAdjacentHTML('beforeend', `
-        <div class="task" id="task${NewTask.id}" data-idtask="${NewTask.id}">
-            <div class="checkbox">
-                <input class="custom-checkbox" type="checkbox" data-status="${NewTask.active}" data-idTask="${NewTask.id}" id="taskInp${NewTask.id}" name="taskInp${NewTask.id}" value="taskInp${NewTask.id}">
-                <label for="taskInp${NewTask.id}">
-                    <span class='task__info'>
-                        <p class="task__info-title" data-idtaskName="${NewTask.id}" id="title${NewTask.id}">${NewTask.nameTask}</p>
-                        <p class="task__info-time">${NewTask.time}</p>
-                    </span>   
-                </label>
-            </div>
-            <div class="task__btn">
-                <button data-idBtnAdd="${NewTask.id}" id="delete${NewTask.id}" type="button" class="task-right-btn task__btn-del">
-                    <img src="./icons/trash-can.png" alt="Delete">
-                </button>
-                <button data-idBtnUpd="${NewTask.id}" id="update${NewTask.id}" type="button" class="task-right-btn task__btn-update">
-                    <img src="./icons/draw.png" alt="Update">
-                </button>
-            </div>
+    const strTask = `
+    <div class="task" id="task${NewTask.id}" data-idtask="${NewTask.id}">
+        <div class="checkbox">
+            <input class="custom-checkbox" type="checkbox" data-status="${NewTask.active}" data-idTask="${NewTask.id}" id="taskInp${NewTask.id}" name="taskInp${NewTask.id}" value="taskInp${NewTask.id}">
+            <label for="taskInp${NewTask.id}">
+                <span class='task__info'>
+                    <p class="task__info-title" data-idtaskName="${NewTask.id}" id="title${NewTask.id}">${NewTask.nameTask}</p>
+                    <p class="task__info-time">${NewTask.time}</p>
+                </span>   
+            </label>
         </div>
-        `);
+        <div class="task__btn">
+            <button data-idBtnAdd="${NewTask.id}" id="delete${NewTask.id}" type="button" class="task-right-btn task__btn-del">
+                <img src="./icons/trash-can.png" alt="Delete">
+            </button>
+            <button data-idBtnUpd="${NewTask.id}" id="update${NewTask.id}" type="button" class="task-right-btn task__btn-update">
+                <img src="./icons/draw.png" alt="Update">
+            </button>
+        </div>
+    </div>
+    `;
+    document.querySelector('.todo__tasks').insertAdjacentHTML('beforeend', strTask);
         checkedboxing(NewTask.id);
         del(NewTask);
         UpdateTask(NewTask);
@@ -48,11 +46,7 @@ function DopDraw(NewTask){
 // Активирован чекбокс или нет
 function checkedboxing(e){
     let status = document.getElementById(`taskInp${e}`).dataset.status;
-    if (status=="true"){
-        status=true;
-    } else {
-        status=false;
-    }
+    status=="true"?status=true:status=false;
     document.getElementById(`taskInp${e}`).checked=status
 }
 // функция удаления
@@ -73,11 +67,19 @@ function UpdateTask(NewTask){
         $.fancybox.open({
             src: '#Updatehidden'
         });
-        document.querySelector('.updTask__nameInp').value=NewTask.nameTask;
+        document.querySelector('.updTask__nameInp').value = document.getElementById(`title${NewTask.id}`).value;
         let statusUpd = true;
         NewTask.active?statusUpd='Completed':statusUpd='Active';
         document.querySelector('.todo__menu-filter-upd').value=statusUpd;
         document.querySelector('.UpdateTask__buttons-add').setAttribute('data-idUpdate',NewTask.id);
+
+        let DataArray = JSON.parse(localStorage.getItem(Noiker));
+        let ObjUpd = DataArray.find((el, i) => {
+            return el.id === NewTask.id
+        })
+        document.querySelector('.updTask__nameInp').value = ObjUpd.nameTask;
+        ObjUpd.active?statusUpd='Completed':statusUpd='Active';
+        document.querySelector('.todo__menu-filter-upd').value =statusUpd ;
     });
 }
 // Клик чекбокса
@@ -116,6 +118,7 @@ document.querySelector('.UpdateTask__buttons-add').addEventListener('click',()=>
     localStorage.setItem(Noiker, JSON.stringify(DataArray));
     document.getElementById(`title${idTaskUpdate}`).textContent=valueTitle;
     document.getElementById(`taskInp${idTaskUpdate}`).checked=statusNewTask;
+    $.fancybox.close();
 })
 
 
@@ -129,22 +132,19 @@ document.getElementById('todo_filter').addEventListener('change',(e)=>{
     let valueFilter = e.target.value;
     let activeArr;
     let DataArray = JSON.parse(localStorage.getItem(Noiker));
-
     if (valueFilter!='All'){
         let status = BooleanStatus(valueFilter);
-        activeArr = DataArray.filter(el=>{
-           return el.active===status
-        })
+        activeArr = DataArray.filter(el=> el.active===status)
     } else {
-        activeArr =DataArray;
+        activeArr = DataArray;
     };
-    console.log(activeArr);
     document.querySelector('.todo__tasks').innerHTML=``;
     activeArr.forEach(el=>{
         DopDraw(el)
     })
-
 });
+
+
 
 
 
@@ -155,7 +155,15 @@ document.querySelector('.addTask__buttons-add').addEventListener('click', ()=>{
         let valueTitle = document.getElementById('addTask__nameInp').value;
         valueTitle = UpperCaseFirstLetter(valueTitle);
         // Получаем значение активности и переводим в true / false
-        let statusNewTask = document.getElementById('todo_fileter_add').value;
+        let filt = document.getElementById('todo_filter').value;
+        console.log(filt);
+        let statusNewTask;
+        if (filt=='All'){
+            statusNewTask = document.getElementById('todo_fileter_add').value;
+        } else {
+            statusNewTask = filt;
+            document.getElementById('todo_fileter_add').disabled = true; 
+        }
         statusNewTask = BooleanStatus(statusNewTask);
         // Получаем строку нынешнего времени
         const timeNewTask = nowTimeDetection();
@@ -179,7 +187,6 @@ document.querySelector('.addTask__buttons-add').addEventListener('click', ()=>{
         // Отрисовка только нового объекта
         DopDraw(NewTask);
         $.fancybox.close();
-        
     }
 });
 
@@ -188,7 +195,6 @@ function BooleanStatus(status){
     status=="Active"?status=false:status=true;
     return status;
 }
-
 // Заглваная буква
 function UpperCaseFirstLetter(str){
     return str.charAt(0).toUpperCase() + str.slice(1); 
@@ -212,8 +218,20 @@ document.querySelector('.todo__menu-add').addEventListener('click', ()=>{
 	$.fancybox.open({
 		src: '#Addhidden'
 	});
+    let filt = document.getElementById('todo_filter').value;
+        console.log(filt);
+        let statusNewTask;
+        if (filt=='All'){
+            statusNewTask = document.getElementById('todo_fileter_add').value;
+            document.getElementById('todo_fileter_add').disabled = false; 
+        } else {
+            statusNewTask = filt;
+            document.getElementById('todo_fileter_add').value=statusNewTask;
+            document.getElementById('todo_fileter_add').disabled = true; 
+        }
+        statusNewTask = BooleanStatus(statusNewTask);
 });
-// выйти из попап добавления
+// выйти из попап
 document.querySelector('.addTask__buttons-close').addEventListener('click',()=>{
     $.fancybox.close();
 });
